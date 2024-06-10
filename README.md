@@ -1,2 +1,3 @@
 # Leetcode-Progress
-A repository to store progress I made on leetcode problems
+This will be used to store my solutions to leetcode problems I worked on.
+Divided by category
