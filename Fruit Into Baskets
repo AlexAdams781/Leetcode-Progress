@@ -1,0 +1,40 @@
+class Solution:
+    def totalFruit(self, fruits: List[int]) -> int:
+        # left pointer
+        start = 0
+        # right pointer
+        end = 1
+        res = 0
+        # f1 stores the value and rightmost index of least recent fruit type picked
+        # f2 stores the value and rightmost index of most recent fruit type picked
+        f1 = (0, fruits[0])
+        # move right pointer until second fruit type is accessed
+        while end < len(fruits):
+            if fruits[end] == f1[1]:
+                f1 = (end, f1[1])
+                end += 1
+            else:
+                f2 = (end, fruits[end])
+                end += 1
+                break
+        
+        while end < len(fruits):
+            # if least recent fruit type found, swap f1 and f2 and update index of f2
+            if fruits[end] == f1[1]:
+                tmp = f1
+                f1 = f2
+                f2 = (end, tmp[1])
+                end += 1
+            # if most recent fruit type found, update index of f2
+            elif fruits[end] == f2[1]:
+                f2 = (end, f2[1])
+                end += 1
+            # if new fruit type found, remove f1, replace with f2, and update index of f2
+            else:
+                res = max(res, end-start)
+                start = f1[0] + 1
+                f1 = f2
+                f2 = (end, fruits[end])
+                end += 1
+        res = max(res, end-start)
+        return res
