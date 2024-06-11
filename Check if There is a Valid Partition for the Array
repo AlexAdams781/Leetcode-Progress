@@ -1,0 +1,15 @@
+'''
+This solution uses a DP approach where an array of length len(nums) stores the solution to the subproblem starting at index i.
+'''
+class Solution:
+    def validPartition(self, nums: List[int]) -> bool:
+        L = len(nums)
+        DP = [False] * (L+1)
+        DP[L] = True
+        DP[L-2] = nums[-2] == nums[-1]
+
+        for i in range(L-3, -1, -1):
+            a, b, c = nums[i], nums[i+1], nums[i+2]
+            DP[i] = (DP[i+3] and ((a == b and a == c) or (a+1 == b and b+1 == c))) or (DP[i+2] and (a == b))
+        
+        return DP[0]
