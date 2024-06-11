@@ -1,0 +1,31 @@
+'''
+We use Dijkstra's algorithm to find the shortest path to the end.  The min heap is the
+priority queue that stores each coordinate point reached along with the time visited.
+'''
+class Solution:
+    def swimInWater(self, grid: List[List[int]]) -> int:
+        shortest = dict()
+        minHeap = [[grid[0][0], 0, 0]]
+
+        while minHeap:
+            #print(minHeap)
+            t, r, c = heapq.heappop(minHeap)
+            if (r, c) in shortest:
+                continue
+            
+            shortest[(r, c)] = t
+
+            i1, j1 = r+1, c
+            i2, j2 = r, c+1
+            i3, j3 = r-1, c
+            i4, j4 = r, c-1
+            if i1 < len(grid) and (i1, j1) not in shortest:
+                heapq.heappush(minHeap, [max(grid[i1][j1], t), i1, j1])
+            if j2 < len(grid[0]) and (i2, j2) not in shortest:
+                heapq.heappush(minHeap, [max(grid[i2][j2], t), i2, j2])
+            if i3 >= 0 and (i3, j3) not in shortest:
+                heapq.heappush(minHeap, [max(grid[i3][j3], t), i3, j3])
+            if j4 >= 0 and (i4, j4) not in shortest:
+                heapq.heappush(minHeap, [max(grid[i4][j4], t), i4, j4])
+
+        return shortest[(len(grid)-1, len(grid[0])-1)]
