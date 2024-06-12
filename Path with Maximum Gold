@@ -1,0 +1,31 @@
+# https://leetcode.com/problems/path-with-maximum-gold/description/
+'''
+This is a classic DFS problem where we mark the cells in the path and unmark when backtracking.
+Revisiting a marked cell is not allowed.  Then return the max dfs value starting from each cell.
+'''
+
+class Solution:
+    def getMaximumGold(self, grid: List[List[int]]) -> int:
+        height, width = len(grid), len(grid[0])
+        dir = [(0, 1), (0, -1), (1, 0), (-1, 0)]
+        
+        def dfs(r, c, path):
+            if grid[r][c] == 0 or ((r, c)) in path:
+                return 0
+
+            amount = 0
+            path.add((r, c))
+            for (rd, cd) in dir:
+                nr, nc = r + rd, c + cd
+                if nr >= 0 and nr < height and nc >= 0 and nc < width:
+                    amount = max(amount, dfs(nr, nc, path))
+
+            path.remove((r, c))
+            return grid[r][c] + amount
+
+        res = 0
+        for i in range(height):
+            for j in range(width):
+                res = max(res, dfs(i, j, set()))
+
+        return res
