@@ -1,0 +1,31 @@
+# https://leetcode.com/problems/largest-divisible-subset/
+'''
+This is a neat problem. To find the largest divisible subset, you need to first sort the list.
+Then use a DP array to store the size of the largest divisible subset starting at the particular
+index.  The final trick is to use a linked list (dictionary) to store index pairs where they are
+divisible.  Then use the linked list to construct the final result.
+'''
+
+class Solution:
+    def largestDivisibleSubset(self, nums: List[int]) -> List[int]:
+        nums.sort()
+        
+        L = len(nums)
+        DP = [1] * L
+        pointer = dict()
+        m = 0
+
+        for i in range(1, L):
+            for j in range(i):
+                if nums[i] % nums[j] == 0 and DP[i] < DP[j]+1:
+                    DP[i] = 1+DP[j]
+                    pointer[i] = j
+                    if DP[i] > DP[m]:
+                        m = i
+        
+        res = [nums[m]]
+        while m in pointer:
+            m = pointer[m]
+            res.append(nums[m])
+
+        return res
