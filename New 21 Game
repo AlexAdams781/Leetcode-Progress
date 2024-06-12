@@ -1,0 +1,26 @@
+# https://leetcode.com/problems/new-21-game/
+'''
+The solution is mathematical and relies on a sliding window.
+'''
+
+class Solution:
+    def new21Game(self, n: int, k: int, maxPts: int) -> float:
+        if k == 0 or n >= k + maxPts:
+            return 1
+        
+        window = 1
+        probability = 0
+        DP = [1] + [0]*n
+
+        for i in range(1, n+1):
+            DP[i] = window / maxPts
+
+            if i >= maxPts:
+                window -= DP[i-maxPts]
+
+            if i < k:
+                window += DP[i]
+            else:
+                probability += DP[i]
+
+        return probability
