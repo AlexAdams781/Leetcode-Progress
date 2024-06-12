@@ -1,0 +1,31 @@
+# https://leetcode.com/problems/maximum-subarray-min-product/description/
+'''
+This problem uses a monotone stack to find the answer.  Everytime a number is
+popped from the stack, that number is the minimum in the subarray, and so it
+is used in the formula.
+'''
+
+class Solution:
+    def maxSumMinProduct(self, nums: List[int]) -> int:
+        prefix = [0]
+        for n in nums:
+            prefix.append(prefix[-1] + n)
+
+        m = nums[0] * nums[0]
+        stack = [(-1, -1)]
+        currIndex = 0
+        oldIndex = 0
+        while currIndex < len(nums):
+            if nums[currIndex] >= stack[-1][1]:
+                stack.append((oldIndex, nums[currIndex]))
+                currIndex += 1
+                oldIndex = currIndex
+            else:
+                oldIndex, oldVal = stack.pop()
+                m = max(m, oldVal * (prefix[currIndex] - prefix[oldIndex]))
+
+        while stack:
+            index, val = stack.pop()
+            m = max(m, val * (prefix[-1] - prefix[index]))
+
+        return m % 1000000007
