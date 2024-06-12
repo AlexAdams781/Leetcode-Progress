@@ -1,0 +1,29 @@
+# https://leetcode.com/problems/edit-distance/
+'''
+This is a 2D DP array.  Using a top-down approach, we traverse the array.  If the characters match,
+we move diagonally, otherwise, we take the min of going right (deleting from word1), going left (adding from word2),
+or diagonally (replacing char from word1 with char from word2).  Each operation incurs a cost of 1.
+'''
+
+class Solution:
+    def minDistance(self, word1: str, word2: str) -> int:
+        R, C = len(word2), len(word1)
+        DP = dict()
+        for i in range(C):
+            DP[(R, i)] = C - i
+        for i in range(R):
+            DP[(i, C)] = R - i
+        DP[(R, C)] = 0
+
+        def dfs(r, c):
+            #print(r, c)
+            if (r, c) in DP:
+                return DP[(r, c)]
+            if word1[c] == word2[r]:
+                DP[(r, c)] = dfs(r+1, c+1)
+                return DP[(r, c)]
+
+            DP[(r, c)] = 1 + min(dfs(r+1, c), min(dfs(r, c+1), dfs(r+1, c+1)))
+            return DP[(r, c)]
+
+        return dfs(0, 0)
