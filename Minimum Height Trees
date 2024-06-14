@@ -1,0 +1,38 @@
+# https://leetcode.com/problems/minimum-height-trees/description/
+'''
+This code uses BFS to remove leaves until we reach the solution. I tried a dfs approach to test if each node had the minimum height
+and it worked, but this method is O(n^2) while the best solution is O(n).
+'''
+
+class Solution:
+    def findMinHeightTrees(self, n: int, edges: List[List[int]]) -> List[int]:
+        # Create Graph and add nodes to leaf queue
+        leaves = []
+        G = dict()
+        for i in range(n):
+            G[i] = set()
+        for (u, v) in edges:
+            G[u].add(v)
+            G[v].add(u)
+        for n in G:
+            if len(G[n]) <= 1:
+                leaves.append(n)
+
+        # BFS Algorithm that removes leaves from tree until each node left in the
+        # graph is a leaf
+        tmp = []
+        size = n+1
+        while len(leaves) < size and leaves:
+            node = leaves.pop()
+            attach = G[node].pop()
+            G[attach].remove(node)
+            if len(G[attach]) == 1:
+                tmp.append(attach)
+            size -= 1
+            
+            if not leaves:
+                leaves = tmp
+                tmp = []
+        
+        # Then return the leaves
+        return leaves
