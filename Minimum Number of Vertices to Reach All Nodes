@@ -1,0 +1,11 @@
+# https://leetcode.com/problems/minimum-number-of-vertices-to-reach-all-nodes/description/
+'''
+This problem is very easy once you realize a certain property of DAG's.
+'''
+
+class Solution:
+    def findSmallestSetOfVertices(self, n: int, edges: List[List[int]]) -> List[int]:
+        res = set([i for i in range(n)])
+        for e in edges:
+            res.discard(e[1])
+        return list(res)
