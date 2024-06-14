@@ -1,0 +1,27 @@
+# https://leetcode.com/problems/is-graph-bipartite/
+'''
+I used a dfs approach to 'color' each node True or False.  If there's a contradiction where we want to recolor a node a different color,
+then an odd cycle is detected and we return false.
+BFS also works here, and I think I will do BFS next time as it's easier for me to implement.
+'''
+
+class Solution:
+    def isBipartite(self, graph: List[List[int]]) -> bool:
+        marked = dict()
+
+        def dfs(i, colored):
+            #print(i, marked, colored)
+            if i in marked:
+                return marked[i] == colored:
+
+            marked[i] = colored
+            for j in graph[i]:
+                if not dfs(j, not colored):
+                    return False
+
+            return True
+
+        for i in range(len(graph)):
+            if i not in marked and not dfs(i, True):
+                return False
+        return True
