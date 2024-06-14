@@ -1,0 +1,31 @@
+# https://leetcode.com/problems/stone-game-iii/
+'''
+I used a bottom up dp approach to solve this one and it was pretty straightforward.
+Something to keep in mind is that keeping track of all n+1 subproblems is unnecessary.
+To save space, consider storing 3 subproblems at a time, each for the next 3 stones you could take.
+The rest are unnecessary.
+'''
+
+class Solution:
+    def stoneGameIII(self, stoneValue: List[int]) -> str:
+        n = len(stoneValue)
+        tmp = list(map(lambda k: abs(k), stoneValue))
+        m = max(tmp)
+        total = m * n
+        # DP stores the maximum you can score if you go first on the ith stone
+        DP = [-total] * (n+1)
+        DP[-1] = 0
+
+        for i in range(n-1, -1, -1):
+            # Alice
+            val = 0
+            for j in range(i+1, min(n+1, i+4)):
+                val += stoneValue[j-1]
+                DP[i] = max(DP[i], val - DP[j])
+
+        print(DP)
+        if DP[0] > 0:
+            return "Alice"
+        if DP[0] == 0:
+            return "Tie"
+        return "Bob"
