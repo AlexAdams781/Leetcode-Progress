@@ -1,0 +1,35 @@
+# https://leetcode.com/problems/best-time-to-buy-and-sell-stock-with-cooldown/
+'''
+This problem can be best apporached by a finite state automata with three states:
+1) You have stock
+2) You recently sold stock (and cannot buy yet)
+3) You don't have stock (and ready to buy)
+
+Then the solution is straightforward.
+'''
+
+class Solution:
+    def maxProfit(self, prices: List[int]) -> int:
+        L = len(prices)+1
+        DP = [[0 for i in range(L)] for j in range(3)]
+        # have stock
+        # doesn't have stock
+        # doesn't have stock but recently sold
+
+        for i in range(L-1, -1, -1):
+            if i == L-1:
+                DP[0][i] = 0
+                DP[1][i] = 0
+                DP[2][i] = 0
+
+            else:
+                # have stock
+                DP[0][i] = max(DP[0][i+1], DP[2][i+1] + prices[i])
+
+                # doesn't have stock
+                DP[1][i] = max(DP[1][i+1], DP[0][i+1] - prices[i])
+
+                # doesn't have stock but recently sold
+                DP[2][i] = DP[1][i+1]
+
+        return DP[1][0]
