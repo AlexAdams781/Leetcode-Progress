@@ -1,0 +1,56 @@
+# https://leetcode.com/problems/pacific-atlantic-water-flow/
+'''
+It is not hard to see that this problem requires BFS.  DFS could also
+work but BFS is more intuitive for me.
+The tricky part is to realise that you need to run BFS from two different sources.
+'''
+
+import copy
+
+class Solution:
+    def pacificAtlantic(self, heights: List[List[int]]) -> List[List[int]]:
+        pacificFront, atlanticFront = set(), set()
+
+        height = len(heights)
+        width = len(heights[0])
+        for i in range(width):
+            pacificFront.add((0, i))
+            atlanticFront.add((height-1, i))
+        for i in range(height):
+            pacificFront.add((i, 0))
+            atlanticFront.add((i, width-1))
+        dirs = [(-1, 0), (1, 0), (0, -1), (0, 1)]
+        visited = copy.copy(pacificFront)
+        front = set()
+        res = []
+
+        while pacificFront:
+            x = pacificFront.pop()
+            for c in dirs:
+                newR, newC = x[0] + c[0], x[1] + c[1]
+                if newR >= 0 and newR < height and newC >= 0 and newC < width and (newR, newC) not in visited and heights[newR][newC] >= heights[x[0]][x[1]]:
+                    front.add((newR, newC))
+                    visited.add((newR, newC))
+
+            if not pacificFront:
+                pacificFront = front
+                front = set()
+
+        visited_ = copy.copy(atlanticFront)
+
+        while atlanticFront:
+            x = atlanticFront.pop()
+            if x in visited:
+                res.append(list(x))
+
+            for c in dirs:
+                newR, newC = x[0] + c[0], x[1] + c[1]
+                if newR >= 0 and newR < height and newC >= 0 and newC < width and (newR, newC) not in visited_ and heights[newR][newC] >= heights[x[0]][x[1]]:
+                    front.add((newR, newC))
+                    visited_.add((newR, newC))
+
+            if not atlanticFront:
+                atlanticFront = front
+                front = set()
+
+        return res
