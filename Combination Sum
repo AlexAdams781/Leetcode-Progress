@@ -1,0 +1,33 @@
+# https://leetcode.com/problems/combination-sum/
+'''
+First the candidates must be sorted to reduce the number of call stacks.
+Then the solution is to implement a decision tree.
+1) Move to next candidate
+2) Include candidate in solutions by appending to each one.
+Then stop when all candidates are exhausted or when the candidate
+is greater than the target (it's sorted)
+
+I thought of using a DP solution to reduce the complexity, but the description
+stated that each testcase had at most 150 solutions. A DP solution would
+require O(target*candidates) space.
+'''
+class Solution:
+    def combinationSum(self, candidates: List[int], target: int) -> List[List[int]]:
+        candidates.sort()
+        def help(target, i):
+            if i == len(candidates):
+                return []
+            val = candidates[i]
+            if val > target:
+                return []
+            if val == target:
+                return [[target]]
+
+            left = help(target, i+1)
+            right = help(target-val, i)
+            for L in right:
+                L.append(val)
+
+            return left + right
+
+        return help(target, 0)
