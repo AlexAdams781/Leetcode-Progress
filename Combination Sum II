@@ -1,0 +1,37 @@
+# https://leetcode.com/problems/combination-sum-ii/
+'''
+This problem is the same as its prequel but doesn't have duplicates.
+My solution was to only store unique candidates along with a dictionary
+containing frequencies.  Then do the same backtracking approach and moving to
+next candidate when the frequency is reached.  Since the unique candidates
+are still sorted, the result has no duplicates.
+'''
+
+class Solution:
+    def combinationSum2(self, candidates: List[int], target: int) -> List[List[int]]:
+        unique = []
+        D = defaultdict(int)
+        for c in candidates:
+            D[c] += 1
+        unique = list(D.keys())
+        unique.sort()
+
+        def help(target, i, freq):
+            if i == len(unique):
+                return []
+            val = unique[i]
+            if val > target:
+                return []
+            if val == target and freq < D[val]:
+                return [[target]]
+            left = help(target, i+1, 0)
+            if freq < D[val]:
+                right = help(target-val, i, freq+1)
+            else:
+                right = []
+            for L in right:
+                L.append(val)
+
+            return left + right
+
+        return help(target, 0, 0)
