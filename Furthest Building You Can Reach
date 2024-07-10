@@ -1,0 +1,30 @@
+# https://leetcode.com/problems/furthest-building-you-can-reach/
+'''
+This problem uses a min heap of size ladders and greedily uses ladders.
+Then it only uses ladders for the top "ladders" values of the min heap.
+Complexity is O(heights * log(ladders))
+'''
+import heapq
+
+class Solution:
+    def furthestBuilding(self, heights: List[int], bricks: int, ladders: int) -> int:
+        climb = 0
+        i = 0
+        minHeap = []
+        heapq.heapify(minHeap)
+        
+        while i < len(heights)-1:
+            diff = max(0, heights[i+1] - heights[i])
+            if len(minHeap) < ladders:
+                heapq.heappush(minHeap, diff)
+            elif minHeap and minHeap[0] < diff:
+                climb += minHeap[0]
+                heapq.heappop(minHeap)
+                heapq.heappush(minHeap, diff)
+            else:
+                climb += diff
+            if climb > bricks:
+                return i
+            i += 1
+
+        return i
