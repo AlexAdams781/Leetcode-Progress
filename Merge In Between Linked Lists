@@ -1,0 +1,32 @@
+# https://leetcode.com/problems/merge-in-between-linked-lists/
+# Definition for singly-linked list.
+# class ListNode:
+#     def __init__(self, val=0, next=None):
+#         self.val = val
+#         self.next = next
+class Solution:
+    def mergeInBetween(self, list1: ListNode, a: int, b: int, list2: ListNode) -> ListNode:
+        idx = 0
+        curr = list1
+        # Find ath node
+        while idx < a-1:
+            curr = curr.next
+            idx += 1
+
+        # tmp1 stores list1 section that will be removed
+        tmp1 = curr.next
+        curr.next = list2
+        idx += 1
+
+        # find tail of removed section
+        while idx <= b:
+            tmp1 = tmp1.next
+            idx += 1
+        
+        # find tail of list2
+        while curr.next:
+            curr = curr.next
+
+        # connect list2 with rest of list1
+        curr.next = tmp1
+        return list1
