@@ -1,0 +1,43 @@
+# https://leetcode.com/problems/remove-nodes-from-linked-list/
+'''
+The plan here is to reverse the list, iterate through
+it and keep the local max nodes, and re-reverse the list.
+I thought this problem was slightly harder because it was more involved
+and the idea to reverse the linked list is not intuitive.
+'''
+
+# Definition for singly-linked list.
+# class ListNode:
+#     def __init__(self, val=0, next=None):
+#         self.val = val
+#         self.next = next
+class Solution:
+    def removeNodes(self, head: Optional[ListNode]) -> Optional[ListNode]:
+        def reverse(head):
+            prev = head
+            cur = prev.next
+            prev.next = None
+            while cur:
+                tmp = cur.next
+                cur.next = prev
+                prev = cur
+                cur = tmp
+            return prev
+
+        
+        if not head.next:
+            return head
+
+        cur = reverse(head)
+        prev = ListNode(next=cur)
+        tail = cur
+        maxVal = 0
+        while cur:
+            if cur.val < prev.val:
+                prev.next = cur.next
+                cur = prev.next
+            else:
+                prev = cur
+                cur = cur.next
+        cur = reverse(tail)
+        return cur
